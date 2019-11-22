@@ -1,0 +1,27 @@
+1. IIS là internet information service là web server chạy trên nền tảng Microsoft .NET trên hệ 
+điều hành.Nó rất linh hoạt và ổn định,được sử dụng rộng rãi. Thường được tích hợp sẵn khi cài
+đặt Visual Studio.
+2. Route là bước đầu tiên trong vòng đời của 1 trang web ASP.NET MVC. Nó ghép nối HTTP request
+đến các URL đã được khai báo trong Route Table(System.Web.Routing.RouteTable)
+3. Controller Initialization(Khời tạo controller) MvcHandler khởi tạo quá trình xử lý bên trong
+vòng đời của một trang web ASP.Net bằng cách sử dụng phương thức ProcessRequest. Phương thức 
+này sử dụng khởi tạo của ControllerFactory để tạo controller tương ứng
+4. Quá trình Action Execution được thể hiện qua các bước:
+	+ ActionInvoker: Khi controller khởi tạo, controller sẽ gọi đến phương thức InvokeAction() 
+để đi vào xử lý chi tiết các phương thức.Việc này được xử lý trong IActionInvoker.
+	+ Model Binders: Sau khi chọn các hành phương thức, model binders
+(System.Web.Mvc.DefaultModelBinder) sẽ lấy data từ HTTP request và thực hiện chuyển đổi dữ liệu, 
+validation data như là required, date format,... cũng như xem xét giá trị đầu vào sẽ được ghép 
+nối đến các tham số nào của phương thức
+	+ Authentication Filter thực thi đầu tiên và được sử dụng để xác định liệu user hiện tại 
+đã được xác thực hay chưa trong request hiện tại. Chúng có thể cắt ngắn mạch pipeline request 
+nếu request chưa được xác thực.
+	+ Action filters được thực thi trước OnActionExecuting và sau OnActionExecuted của 1 
+action được execute. IActionFilter interface cung cấp 2 phương thức là OnActionExecuting và 
+OnActionExecuted tương ứng với trước và sau action diễn ra. Có thể tự định nghĩa ActionFilters
+bằng cách implements IActionFilter.
+	+ Khi action đã được thực thi, Controller sẽ xử lý user inputs với các thông tin từ 
+model và trả về Action Result
+5. - Dữ liệu được xử lý từ controller hoặc sẽ được render ra mã HTML để hiển thị lên browser(View)
+, hoặc sẽ được trả về dạng dữ liệu thô như text format, binary format, JSON format
+(Non View Result)
