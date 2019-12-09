@@ -1,0 +1,192 @@
+Đèn ở gần cửa ra vào phía trên
+
+uniqueidentifier(trong sql tương ứng với kiểu Guid trong asp.net)
+10.21.25.103/101 -> crm.npc.com.vn
+D:\PROJECT\projects\NEvnCRM\trunk\Evn.OMSServices\WebService1.asmx.cs GetLichCatDienByDVQL
+
+Chạy sp từ: D:\PROJECT\projects\NEvnCRM\trunk\Misc\UpgradeSQL-2019:
+-201907061122_Alter_Table_PhieuYeuCau_Log.sql lên trên
+
+GetSoLuongPhieuSapHetHanRealTime->201909291545_GetSoLuongPhieuSapHetHanRealTime.sql
+SP_DemSoDienThoaiGoiToiNhieuLan->201909231848_SP_DemSoDienThoaiGoiToiNhieuLan.sql	201910132139_Alter_SP_DemSoDienThoaiGoiNhieuLan.sql
+SP_KhachHang_GetKhachHangLienQuan->201907221014_Procedure_KhachHang.sql
+
+
+ETL key etl data warehouse
+
+
+- Trung tâm cskh
+	○ Giao dịch viên trưởng : Trưởng Ca
+	○ Giao dịch viên
+	
+- Điện lực
+	○ Nhân viên cskh
+	
+- Phòng GS MBD có quyền ngang với các phòng, Điện lực khác trong Công ty điện lực
+
+SR
+setup
+- install
+- configure
+- deployment
+Implement
+- Chart
+- Report
+- Grid and Submit Form
+Integration
+- Integrate over API
+- Integrate to asp .net core
+
+
+
+SR thêm:
+	+Zoom
+	+FullScreen
+	+Print(https://demos.devexpress.com/XtraReportsDemos/ComplexReports/BalanceSheetReport.aspx)
+	+Tìm hiểu thêm về Dapper ORM,NHibernate  tương ứng như Entity Framework (orm for .net core - https://softchris.github.io/pages/dotnet-orm.html#why-orm)
+
+Sửa RDLC
+	+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+	=>2016->2008
+	+Xóa 2 thẻ <ReportSection><ReportSections>....</ReportSection></ReportSections> (Chỉ xóa thẻ không xóa nội dung ở trong)
+	+Xóa thẻ và nội dung trong <ReportParametersLayout>
+
+
+SP sau 16/10/2019 có thể alter thỏa mái, trước đó phải tạo SP mới
+
+Giao dịch viên trưởng thuộc trung tâm CSKH thì có thể nhìn thấy tất cả nhân viên thuộc các công ty các tỉnh
+
+Group chat chưa hiện tên người chat: nếu 3 người thì không biết ai với ai
+Giao dịch viên thuộc Phòng CSKH ko chat được với nhau
+Khi 1 người chat vào group thì phải click vào group mới thấy tin nhắn của người đó. Với những người khác trong group thì phải reload lại trang và click vào group để thấy tin nhắn vừa gửi
+
+
+CSKH không nhìn thấy giao dịch viên trưởng
+CSKH không nhìn thấy CSKH ở cáp cao hơn (giao thủy không nhìn được nam định) nhưng cao hơn thấy được thấp hơn
+=> Muốn chat thì tạo nhóm
+
+tìm deploy nodejs project in running background
+
+TEMP:
+D:\PROJECT\evn-npc\NEvnCRM\trunk\TiniCRM.DAO\DAO\NotifiDAO.cs
+D:\PROJECT\evn-npc\NEvnCRM\trunk\TiniCRM.DAO\Models\NotificationDetailEntity.cs
+D:\PROJECT\evn-npc\NEvnCRM\trunk\TinyCRM.Web\Views\ThongBao\Detail.cshtml
+D:\PROJECT\evn-npc\NEvnCRM\trunk\Misc\UpgradeSQL-2019\201911291647_CREATE_SP_NotificationEntity_GetDetailByParentId_AddContent.sql
+
+Kiểm tra trên GUI xem có thông báo đugn phiếu quá hạn tiếp nhận, xử lý k
+Check cache có được làm mới không, Notifi Cache k
+
+Thêm người gửi SP_NotificationEntity_GetDetailByParentId_AddContent
+select u2.UserName as FromUserName,u1.UserName as ToUserName, up.FullName as ToUserFullName,nu.ReadDate,np.Content
+from dbo.aspnet_Users u1 
+INNER JOIN dbo.UserProfiles up on up.Id=u1.UserId
+INNER JOIN dbo.Notifi nu on up.Id=nu.ToId
+INNER JOIN dbo.aspnet_Users u2 on u2.UserId=nu.FromId
+INNER JOIN dbo.NotifiParent np on np.Id=nu.ParentId
+
+Cmis là hệ thống db trung gian, Dữ liệu từ cmis sẽ đổ về DB trung gian, từ db trung gian đổ về 185(test)hoặc 100(thật)
+Mất điện cx tương tự, OMS là hệ thống mất điện: nó có 1 db nào đấy đổ dữ liệu mất điện về db trung gian. Mình phải chọc thẳng vào db trung gian để lấy dữ liệu mất điện
+(db trung gian là oracle: 10.21.52.2 )
+OMSController>
+
+var reqdata = {
+                customerId: $('#lblPopupMaPe').html().trim(),
+                organizationCode: $('#hidPopupOrganizationCode').val().trim(),
+            };
+            webaby.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetHoaDonDieuChinh", "PhieuYeuCau").JsRaw()',
+                data: reqdata,
+                success: function (LHDdata) {
+                        for (var i in LHDdata) {
+                            LHDdata[i].COSFI=(LHDdata[i].COSFI=="0.0")?"":LHDdata[i].COSFI;
+                            LHDdata[i].KCOSFI=(LHDdata[i].KCOSFI=="0.0")?"":LHDdata[i].KCOSFI;
+                            LHDdata[i].TONGDIEN_TTHU=parseFloat(LHDdata[i].TONGDIEN_TTHU).toFixed(0);
+                            LHDdata[i].SO_TIEN=parseFloat(LHDdata[i].SO_TIEN).toFixed(0);
+                            LHDdata[i].TIEN_GTGT=parseFloat(LHDdata[i].TIEN_GTGT).toFixed(0);
+                            LHDdata[i].TONG_TIEN=parseFloat(LHDdata[i].TONG_TIEN).toFixed(0);
+                            $('#tblCustomerPaymentHistory').append(
+                                '<tr>'
+                                + '<td>' + LHDdata[i].ID_HDON + '</td>'
+                                + '<td>' + LHDdata[i].KY + '</td>'
+                                + '<td>' + LHDdata[i].NGAY_PHANH + '</td>'
+                                + '<td>' + LHDdata[i].NGAY_DKY + '</td>'
+                                + '<td>' + LHDdata[i].NGAY_CKY + '</td>'
+                                + '<td>' + LHDdata[i].TONGDIEN_TTHU + '</td>'
+                                + '<td>' + LHDdata[i].SO_TIEN + '</td>'
+                                + '<td>' + LHDdata[i].TIEN_GTGT + '</td>'
+                                + '<td>' + LHDdata[i].TONG_TIEN + '</td>'
+                                + '<td>' + LHDdata[i].COSFI + '</td>'
+                                + '<td>' + LHDdata[i].KCOSFI + '</td>'
+                                + '<td>' + LHDdata[i].LOAI_HDON + '</td>'
+                                + '</tr>'
+                            );
+                        }
+                }
+});
+
+
+
+@using TinyCRM.LichCupDien
+
+@model Evn.ServiceIntegration.OMSWebService.LichCupDienAgent[]
+
+<div class="row-fluid" style="margin-top: 10px;">
+    <div class="pull-left" style="margin-top: 5px; font-weight: bold">
+        Tổng số: @Model.Count()
+    </div>
+</div>
+
+<table class="table table-striped table-condensed table-bordered table-advance table-hover">
+    <thead>
+        <tr>
+            <th style="width: 170px !important">@T["Đơn vị"]</th>
+            <th style="width: 136px !important">@T["Thời gian mất điện"]<br />@T["(theo kế hoạch)"]</th>
+            <th>@T["Nội dung công tác"]</th>
+            <th>@T["Thiết bị thao tác"]</th>
+            <th>@T["Trạm mất điện"]</th>
+            <th>@T["Khu vực mất điện"]</th>
+            <th>@T["Ngày sửa"]</th>
+            <th>@T["Ngày tạo"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Evn.ServiceIntegration.OMSWebService.LichCupDienAgent lcd in Model)
+        {
+        <tr>
+            <td class="table-item" style="width: 170px !important">@lcd.TenDVQL</td>
+            <td class="table-item" style="width: 136px !important">
+                @if (lcd.NgayMatDienKeHoach_Tu.Date != lcd.NgayMatDienKeHoach_Den.Date)
+                {
+                <div style="float: left">
+                    @lcd.NgayMatDienKeHoach_Tu.ToString("dd/MM/yyyy")<br />
+                    @lcd.NgayMatDienKeHoach_Tu.ToString("HH:mm")
+                </div>
+                <div style="float: left">&nbsp;-&nbsp;</div>
+                <div style="float: left">
+                    @lcd.NgayMatDienKeHoach_Den.ToString("dd/MM/yyyy")<br />
+                    @lcd.NgayMatDienKeHoach_Den.ToString("HH:mm")
+                </div>
+                }
+                else
+                {
+                <div style="float: left">
+                    @lcd.NgayMatDienKeHoach_Tu.ToString("dd/MM/yyyy")<br/>
+                    @lcd.NgayMatDienKeHoach_Tu.ToString("HH:mm")&nbsp;-&nbsp;@lcd.NgayMatDienKeHoach_Den.ToString("HH:mm")
+                </div>
+                }
+            </td>
+            <td class="table-item">@lcd.LyDoMatDien</td>
+            <td class="table-item">@lcd.ThietBiThaoTac</td>
+            <td class="table-item">@lcd.TramMatDien</td>
+            <td class="table-item">@lcd.KhuVucMatDien</td>
+            <td class="table-item">@lcd.NgaySua</td>
+            <td class="table-item">@lcd.NgayTao</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+CHAT CRM : node js, mongoose,socket io
+emit gửi đi, on là nhận về của client và socket
+    

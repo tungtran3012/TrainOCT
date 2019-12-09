@@ -1,0 +1,23 @@
+Deploy chat
+Local: từ nhánh chatServer : git pull origin master
+git push -> push lên nhánh master
+
+Putty:68.183.227.65 - root Pass Hanoi@2019
+cd /home/application/web/server_chat_cms
+git pull
+pm2 stop start.config.js
+pm2 start start.config.js
+(debug: node server.js)
+
+GIT 
+git merge continue --
+từ nhánh chatServer: git pull origin master
+git checkout -f -B chatServer remotes/origin/chatServer --
+git log
+git status
+
+Giao dịch phiếu nhận cuộc gọi và tạo phiếu, phiếu chuyển về công ty điện lực (Trạng thái:chuyển xử lý), ở chỗ chuyển phiếu có thể chọn nhân viên cụ thể nhận phiếu
+ở công ty điện lực: + Phiếu chuyển đúng ấn tiếp nhận (Trạng thái:tiếp nhận xứ lý)và xử lý
+		    + Phiếu có vấn đề thì chuyển lại về trung tâm cskh để gdv xem lại
+Sau xử lý xong sẽ ấn hoàn tất(TT HOÀN TẤT)
+
