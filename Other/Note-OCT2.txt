@@ -21,3 +21,42 @@ Giao dịch phiếu nhận cuộc gọi và tạo phiếu, phiếu chuyển về
 		    + Phiếu có vấn đề thì chuyển lại về trung tâm cskh để gdv xem lại
 Sau xử lý xong sẽ ấn hoàn tất(TT HOÀN TẤT)
 
+Notification: quá hạn tiếp nhận, quá hạn xử lý . Để check notification này trên navigation bar:
+Tức là sửa cái thời gian này(bảng [EvnCrm007].[dbo].[ThoiGianQuaHanLoaiDichVu]==> Lấy loaiDichVuId trong LoaiDichVuController(hàm Details))
+để xem nó có vào Phiếu Quá hạn tiếp nhận, quá hạn xử lý k
+ UPDATE [EvnCrm007].[dbo].[ThoiGianQuaHanLoaiDichVu] 
+ SET ThoiGianXuLy=2,ThoiGianTiepNhan=2   
+ WHERE LoaiDichVuId= '917D14A3-4E09-4135-ACFE-47F2D7EA92FC' AND LocationTypeId='B2C4276D-0C2A-4367-B4EC-55E0879BE450'
+
+Cache: có 2 con server, http://npc.crm.com.vn/ và local. Local thì không kết nối mạng dùng mạng lan, npc có kết nối
+npc,local đều dùng cache. Dữ liệu trên local và npc ko giống nhau(trên 2 máy khác nhau) vì sau 1 khoảng thời gian cache
+mới refresh lại.
+Local 101 ip ko public ra ngoài: chỉ Trung tâm CSKH truy cập được. Trung tâm CSKH ko có mạng internet, chỉ có mạng nội
+bộ.
+Npc:103 có ip public ra ngoài(http://crm.npc.com.vn/) tất cả mọi người có mạng đều vào được.
+103 và 101 cùng trên 1 dải mạng 10.21.25 (local) nên ở Trung tâm CSKH có thể vào dk cả 2
+cmis(oracle): 52.2 nó chỉ cho phép một số ip truy cập vào
+
+Mỗi lần load lại trang cần chú ý cache:
++Gọi ajax trong navigation bar
++NEvnCRM\trunk\TinyCRM.Web\Controllers\NotificationController.cs
++NEvnCRM\trunk\TiniCRM.Cache\NotificationCache.cs
++NEvnCRM\trunk\TinyCRM\PhieuYeuCau\Tasks
+(Load lại trang thì nó gọi đến ajax trong navigation bar(Url.Action("PhieuYeuCauOverdueChecker", "Notification")) mà cứ gửi request liên tục lên server thì sẽ
+treo server -> cần có cache khi load lại trang cần lấy trong cache trong memory, 1 giây nó lại cập nhật cache)
+newList là gì?
+
+Sửa giao diện cột địa chỉ trên Tìm phiếu yêu cầu: word-break: break-all;
+Công đã publish dll lên 185(Desktop), đã đẩy lên 103 lên đó lấy về.
+Nếu tự publish ở máy morph thì phải nhớ sửa
+	+ Thêm vào web config(<add key="MaxRowExcel" value="65000"/>)
+	+ Sửa trong ReportController 10000-> MaxRowExcel
+	+ Comment nội dụng hàm Excecute trong: NPC - Copy\NEvnCRM\trunk\TinyCRM\PhieuYeuCau\Tasks\SoDienThoaiGoiToiNhieuLanChecker.cs
+
+Thư mục trên 103: +Backup: D:\Deploy\Backup\npccrm20191015800.zip
+		  +File cần thêm vào ở chỗ: D:\Deploy\DeployCode\Update20191213\File Dll, va file config.zip
+		  +Thêm vào web config(<add key="MaxRowExcel" value="65000"/>)
+
+Thư mục trên 101: +Backup: D:\Deploy\Backup\npccrm20191015800.zip
+		  +File cần thêm vào ở chỗ: D:\Deploy\DeployCode\Update20191213\File Dll, va file config.zip
+		  +Thêm vào web config(<add key="MaxRowExcel" value="65000"/>)
